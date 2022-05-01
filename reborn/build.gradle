@@ -1,0 +1,39 @@
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+//        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.1"
+    }
+}
+
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion '29.0.3'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    //noinspection GradleDynamicVersion
+    implementation 'com.facebook.react:react-native:+'
+    implementation 'com.github.PhamHaiLong99:WifiConnect:1.0.0'
+}

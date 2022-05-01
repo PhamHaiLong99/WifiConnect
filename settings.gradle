@@ -10,3 +10,4 @@ dependencyResolutionManagement {
 rootProject.name = "ConnectAndoirdQ"
 include ':app'
 include ':app', ':wifiutils'
+include ':app', ':reborn'

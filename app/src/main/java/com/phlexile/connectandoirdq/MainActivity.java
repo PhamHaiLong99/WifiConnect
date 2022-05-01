@@ -32,7 +32,7 @@ import com.thanosfisherman.wifiutils.wifiRemove.RemoveSuccessListener;
 import static com.thanosfisherman.wifiutils.WifiUtils.wifiLog;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.reactlibrary.rnwifi.RNWifiModule;
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -68,20 +68,21 @@ public class MainActivity extends AppCompatActivity {
     }
     public void sendMessage(View view) {
 //        Toast.makeText(getApplicationContext(),"Hello Javatpoint",Toast.LENGTH_SHORT).show();
-        WifiUtils.withContext(this)
-                .connectWith("FPT", "")
-                .setTimeout(15000)
-                .onConnectionResult( new ConnectionSuccessListener() {
-                @Override
-                public void success() {
-                    Toast.makeText(MainActivity.this, "SUCCESS!", Toast.LENGTH_SHORT).show();
-                }
+       WifiUtils.withContext(this)
+               .connectWith("FPT", "")
+               .setTimeout(15000)
+               .onConnectionResult( new ConnectionSuccessListener() {
+               @Override
+               public void success() {
+                   Toast.makeText(MainActivity.this, "SUCCESS!", Toast.LENGTH_SHORT).show();
+               }
 
-                @Override
-                public void failed(@NonNull ConnectionErrorCode errorCode) {
-                    Toast.makeText(MainActivity.this, "EPIC FAIL!" + errorCode.toString(), Toast.LENGTH_SHORT).show();
-                }
-        })
-            .start();
+               @Override
+               public void failed(@NonNull ConnectionErrorCode errorCode) {
+                   Toast.makeText(MainActivity.this, "EPIC FAIL!" + errorCode.toString(), Toast.LENGTH_SHORT).show();
+               }
+       })
+           .start();
+        // RNWifiModule.loadWifiList();
         }
 }

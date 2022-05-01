@@ -422,117 +422,25 @@ public final class ConnectorUtils {
             wifiLog("WPA");
             wifiConfiguration.preSharedKey = "\"" + password + "\"";
         } else {
+            wifiLog("open network");
+            Intent settingsWifi =  new Intent(Settings.ACTION_WIFI_SETTINGS);
+            settingsWifi.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //FOR open network.
-            context.startActivity(new Intent("android.settings.WIFI_SETTINGS"));
+            context.startActivity(settingsWifi);
             return;
         }
     }
     // Long viet lai
     @RequiresApi(Build.VERSION_CODES.Q)
     private static boolean connectAndroidQ(@NonNull final Context context, @Nullable WifiManager wifiManager, @Nullable ConnectivityManager connectivityManager, @NonNull WeakHandler handler, @NonNull WifiConnectionCallback wifiConnectionCallback, @NonNull ScanResult scanResult, @NonNull String password, boolean patternMatch, @Nullable String ssid) {
-//        if (connectivityManager == null) {
-//            return false;
-//        }
-//
-//        WifiNetworkSpecifier.Builder wifiNetworkSpecifierBuilder = new WifiNetworkSpecifier.Builder();
-//
-//        if (patternMatch) {
-//            wifiNetworkSpecifierBuilder.setSsidPattern(new PatternMatcher(ssid != null ? ssid : scanResult.SSID, PatternMatcher.PATTERN_PREFIX));
-//        } else {
-//            wifiNetworkSpecifierBuilder
-//                    .setSsid(scanResult.SSID)
-//                    .setBssid(MacAddress.fromString(scanResult.BSSID));
-//        }
-//
-//        final String security = ConfigSecurities.getSecurity(scanResult);
-//
-////        ConfigSecurities.setupWifiNetworkSpecifierSecurities(wifiNetworkSpecifierBuilder, security, password);
-//
-//
-//        final NetworkRequest networkRequest = new NetworkRequest.Builder()
-//                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-////                .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-//                .setNetworkSpecifier(wifiNetworkSpecifierBuilder.build())
-////                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-//                .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-//                .build();
-//
-//        // cleanup previous connections just in case
-//        DisconnectCallbackHolder.getInstance().disconnect();
-//
-//        final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
-//            @Override
-//            public void onAvailable(@NonNull Network network) {
-//                super.onAvailable(network);
-//
-//                wifiLog("AndroidQ+ connected to wifi ");
-//
-//                // TODO: should this actually be in the success listener on WifiUtils?
-//                // We could pass the networkrequest maybe?
-//
-//                // bind so all api calls are performed over this new network
-//                // if we don't bind, connection with the wifi network is immediately dropped
-//
-//                DisconnectCallbackHolder.getInstance().bindProcessToNetwork(network);
-//                connectivityManager.setNetworkPreference(ConnectivityManager.DEFAULT_NETWORK_PREFERENCE);
-//
-//                // On some Android 10 devices, connection is made and than immediately lost due to a firmware bug,
-//                // read more here: https://github.com/ThanosFisherman/WifiUtils/issues/63.
-//                handler.postDelayed(() -> {
-//                    if (isAlreadyConnected(wifiManager, of(scanResult).next(scanResult1 -> scanResult1.BSSID).get())) {
-//                        wifiConnectionCallback.successfulConnect();
-//                    } else {
-//                        wifiConnectionCallback.errorConnect(ConnectionErrorCode.ANDROID_10_IMMEDIATELY_DROPPED_CONNECTION);
-//                    }
-//                }, 500);
-//            }
-//
-//            @Override
-//            public void onUnavailable() {
-//                super.onUnavailable();
-//
-//                wifiLog("AndroidQ+ could not connect to wifi");
-//
-//                wifiConnectionCallback.errorConnect(ConnectionErrorCode.USER_CANCELLED);
-//            }
-//
-//            @Override
-//            public void onLost(@NonNull Network network) {
-//                super.onLost(network);
-//
-//                wifiLog("onLost");
-//
-//                // cancel connecting if needed, this prevents 'request loops' on some oneplus/redmi phones
-//                DisconnectCallbackHolder.getInstance().unbindProcessFromNetwork();
-//                DisconnectCallbackHolder.getInstance().disconnect();
-//
-//            }
-//        };
-//
-//        DisconnectCallbackHolder.getInstance().addNetworkCallback(networkCallback, connectivityManager);
-//
-//        wifiLog("connecting with Android 10");
-//        DisconnectCallbackHolder.getInstance().requestNetwork(networkRequest);
-
-        final WifiNetworkSuggestion FptSuggestion =
-                new WifiNetworkSuggestion.Builder()
-                        .setSsid(ssid)
-                        .setWpa2Passphrase(password)
-                        .setIsAppInteractionRequired(true) // Optional (Needs location permission)
-                        .build();
-
-        final List<WifiNetworkSuggestion> suggestionsList =
-                new ArrayList<WifiNetworkSuggestion>();
-        suggestionsList.add(FptSuggestion);
-
-        final int status = wifiManager.addNetworkSuggestions(suggestionsList);
-        if (status != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
-            // do error handling here…
-            wifiLog("error_network_suggesstion");
+        if (wifiManager.getConnectionInfo().getSSID().contains("FPT")) {
+            wifiLog("contain FPT");
+            return  true;
         }
-//        context.registerReceiver();
-//        forgetNetwork(context,wifiManager);
-//        connectToNetwork(ssid,password,context,wifiManager,scanResult);
+        wifiLog("ssid" +ssid);
+        wifiLog("forget and coonect network");
+        forgetNetwork(context,wifiManager);
+        connectToNetwork(ssid,password,context,wifiManager,scanResult);
         return true;
     }
 
